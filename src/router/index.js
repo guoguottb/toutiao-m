@@ -5,21 +5,18 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/",
-    //重定向
-    redirect: "/home",
-  },
-  {
     path: "/login",
     component: () => import("@/views/login"),
   },
   {
     path: "/",
     component: () => import("@/views/Layout"),
+    // 重定向
+    redirect: "/ ",
     name: "layout",
     children: [
       {
-        path: "/home",
+        path: "/ ",
         component: () => import("@/views/home"),
         name: "home",
       },
