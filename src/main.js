@@ -14,6 +14,8 @@ Vue.use(Vant);
 //引入flexible
 import "amfe-flexible/index.min.js";
 
+
+
 Vue.config.productionTip = false;
 
 new Vue({

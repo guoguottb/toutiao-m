@@ -14,3 +14,16 @@ export const login = (mobile, code) => {
     data: { mobile, code },
   });
 };
+
+/**
+ * 发送验证码
+ * @param {String} mobile 手机号
+ * @returns Promise
+ */
+
+//   /v1_0/sms/codes/:mobile
+export const sendCode = (mobile) => {
+  return request({
+    url: `/v1_0/sms/codes/${mobile}`,
+  });
+};
