@@ -1,4 +1,6 @@
 import request from "@/utils/request";
+// 引入 获取token的方法
+import store from "@/store";
 
 /**
  *
@@ -25,5 +27,12 @@ export const login = (mobile, code) => {
 export const sendCode = (mobile) => {
   return request({
     url: `/v1_0/sms/codes/${mobile}`,
+  });
+};
+
+// 登录成功之后 获取用户信息
+export const getUserInfo = () => {
+  return request({
+    url: "/v1_0/user",
   });
 };
