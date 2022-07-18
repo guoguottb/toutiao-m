@@ -14,7 +14,8 @@ Vue.use(Vant);
 //引入flexible
 import "amfe-flexible/index.min.js";
 
-
+// 格式化时间的插件
+import dayjs from "dayjs";
 
 Vue.config.productionTip = false;
 
