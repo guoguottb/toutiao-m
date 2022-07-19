@@ -72,7 +72,7 @@ export default {
   // 数据
   data() {
     return {
-      isShow: true,
+      isShow: false,
       allChannels: [],
       isEdit: false,
     };

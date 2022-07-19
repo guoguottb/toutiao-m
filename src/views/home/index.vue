@@ -6,6 +6,7 @@
       shape="round"
       background="#4397F8"
       placeholder="请输入搜索关键词"
+      @click="$router.push('/search')"
     />
     <!-- tabs 选项卡  -->
     <van-tabs v-model="active" swipeable>

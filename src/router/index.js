@@ -41,6 +41,10 @@ const routes = [
     path: "*",
     component: () => import("@/views/404"),
   },
+  {
+    path: "/search",
+    component: () => import("@/views/search"),
+  },
 ];
 
 const router = new VueRouter({
