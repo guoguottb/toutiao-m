@@ -14,17 +14,29 @@
         <div class="myChannel">
           <!-- 标题栏 -->
           <van-cell title="我的频道">
-            <van-button size="small" round class="Edit-btn">编辑</van-button>
+            <van-button
+              size="small"
+              round
+              class="Edit-btn"
+              @click="isEdit = !isEdit"
+              >{{ isEdit ? "完成" : "编辑" }}</van-button
+            >
           </van-cell>
           <!-- tabs 栏 -->
           <van-grid :border="false" gutter="10px">
             <van-grid-item
               :text="item.name"
-              v-for="item in myChannels"
+              v-for="(item, index) in myChannels"
               :key="item.id"
+              :class="{ active: item.name === '推荐' }"
+              @click="delTab(item, index)"
             >
               <template #icon class="iconFather">
-                <van-icon name="cross" class="icon-cross" />
+                <van-icon
+                  name="cross"
+                  class="icon-cross"
+                  v-show="isEdit && item.name !== '推荐'"
+                />
               </template>
             </van-grid-item>
           </van-grid>
@@ -45,7 +57,7 @@
               :text="item.name"
               v-for="item in racommendChannels"
               :key="item.id"
-              item.id
+              @click="addTab(item)"
             />
           </van-grid>
         </div></div
@@ -62,6 +74,7 @@ export default {
     return {
       isShow: true,
       allChannels: [],
+      isEdit: false,
     };
   },
   // 父向子 传参
@@ -81,6 +94,28 @@ export default {
       this.allChannels = res.data.data.channels;
       console.log(this.allChannels);
     },
+    // 在我的频道中 添加/移出tab
+    delTab(item, index) {
+      // item.name !== 推荐， 并且 isEdit 为 true 时候删除tab
+      if (this.isEdit && item.name !== "推荐") {
+        this.$emit("delTab", item.id);
+      }
+      // 如果 不处于编辑状态
+      if (!this.isEdit) {
+        // 挂壁弹出层
+        this.isShow = false;
+        // 切换父组件中的active
+        this.$emit("changeTab", index);
+      }
+    },
+    // 点击添加推荐频道里的tab
+    addTab(item) {
+      // 如果 isEdit 为true 则允许操作
+      if (this.isEdit) {
+        // 在父组件中的我的频道列表中 push 这个对象 进而影响这个子组件的视图  计算属性 allChannels 也会影响
+        this.$emit("addTab", { ...item });
+      }
+    },
   },
   // 创建后
   created() {
@@ -99,6 +134,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+//
+.active {
+  :deep(.van-grid-item__text) {
+    color: #ff69b4;
+  }
+}
+
 .myChannel {
   padding-top: 100px;
 
