@@ -1,6 +1,10 @@
 <template>
   <div>
-    <van-cell v-for="(item, index) in highLightData" :key="index">
+    <van-cell
+      v-for="(item, index) in highLightData"
+      :key="index"
+      @click="goResults(index)"
+    >
       <template #title>
         <span v-html="item"></span>
       </template>
@@ -14,7 +18,6 @@
 <script>
 // 引入Api
 import { getSearchSuggestions } from "@/apis";
-import { watch } from "vue";
 export default {
   name: "searchSuggestions",
   data() {
@@ -42,6 +45,11 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    // 跳转到搜索结果
+    goResults(index) {
+      let value = this.searchSuggestions[index];
+      this.$emit("goResults", value);
     },
   },
   watch: {
