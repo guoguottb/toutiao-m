@@ -16,3 +16,14 @@ export const getArticleList = (channelId, timestamp) => {
     },
   });
 };
+
+/**
+ *  获取新闻详情
+ * @param {String} newsId
+ * @returns
+ */
+export const getNewsDetails = (newsId) => {
+  return request({
+    url: `/v1_0/articles/${newsId}`,
+  });
+};

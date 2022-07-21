@@ -45,6 +45,11 @@ const routes = [
     path: "/search",
     component: () => import("@/views/search"),
   },
+  // 文章详情页面
+  {
+    path: "/particulars",
+    component: () => import("@/views/textParticulars"),
+  },
 ];
 
 const router = new VueRouter({

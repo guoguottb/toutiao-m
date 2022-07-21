@@ -61,6 +61,7 @@ export default {
         const res = await getArticleList(this.id, +new Date());
         this.ArticleList = res.data.data.results;
         this.pre_timestamp = res.data.data.pre_timestamp;
+        console.log(this.ArticleList);
       } catch (error) {
         const status = error.response.status;
         if (status === 400) {
