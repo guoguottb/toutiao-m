@@ -36,3 +36,25 @@ export const getUserInfo = () => {
     url: "/v1_0/user",
   });
 };
+
+/** 获取用户个人资料
+ * @param {String}
+ */
+export const getPersonalData = () => {
+  return request({
+    url: "/v1_0/user/profile",
+  });
+};
+
+/**
+ *  编辑用户个人资料
+ * @param {Object} data 用户的个人资料
+ * @returns
+ */
+export const editUserInfo = (data) => {
+  return request({
+    method: "PATCH",
+    url: "/v1_0/user/profile",
+    data,
+  });
+};
