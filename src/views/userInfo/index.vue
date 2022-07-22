@@ -152,10 +152,14 @@ export default {
         });
         this.userInfo.gender = value === "男" ? 0 : 1;
         console.log(res);
+        // 关闭弹框
         this.userGender = false;
+        // 轻提示
+        this.$toast.success("修改成功");
       } catch (error) {
         console.log(error);
         this.userGender = false;
+        this.$toast.fail("修改失败");
       }
     },
     // 更新生日的确认按钮
