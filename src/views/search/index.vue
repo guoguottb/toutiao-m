@@ -44,8 +44,15 @@ export default {
     onSearch() {
       // 按下回车按钮需要发送请求渲染 搜索结果
       let key = this.keywords;
+      // 如果该搜索建议不在搜索历史数组中
       if (!this.searchList.includes(key)) {
-        // 如果keywords有值的情况下按下了回车键 这push到搜索建议里面
+        // 如果keywords有值的情况下按下了回车键 这unshift到搜索建议里面
+        this.searchList.unshift(key);
+        localStorage.setItem("searchList", JSON.stringify(this.searchList));
+      }
+      // 该关键字在搜索历史中  将该关键词调至最前面
+      else {
+        this.searchList = this.searchList.filter((item) => item !== key);
         this.searchList.unshift(key);
         localStorage.setItem("searchList", JSON.stringify(this.searchList));
       }
@@ -61,10 +68,12 @@ export default {
     // 删除某个搜索建议
     delFn(value) {
       this.searchList = this.searchList.filter((item) => item !== value);
+      localStorage.setItem("searchList", JSON.stringify(this.searchList));
     },
     // 删除所有的搜索历史
     delAll() {
       this.searchList = [];
+      localStorage.setItem("searchList", JSON.stringify(this.searchList));
     },
     //
     goResults(value) {
