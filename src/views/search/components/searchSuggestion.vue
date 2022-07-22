@@ -22,7 +22,11 @@ export default {
   name: "searchSuggestions",
   data() {
     return {
+      // 搜索建议所存放的数组
       searchSuggestions: [],
+      // 防抖
+      getSuggestions: false,
+      timer: "",
     };
   },
   props: {
@@ -56,7 +60,13 @@ export default {
     keywords: {
       immediate: true,
       handler() {
-        this.getSearchSuggestions();
+        if (this.timer) {
+          clearTimeout(this.timer);
+        }
+        // 进来清除防抖阀
+        this.timer = setTimeout(() => {
+          this.getSearchSuggestions();
+        }, 600);
       },
     },
   },

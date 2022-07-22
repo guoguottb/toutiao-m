@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 750px; background-color: #F5F7F9">
     <!-- 渲染搜索结果 -->
     <van-cell-group>
       <van-cell
@@ -90,6 +90,7 @@ export default {
 <style lang="less" scoped>
 .bottomText {
   background-color: rgb(245, 247, 249);
+  border: 0;
   div {
     text-align: center;
     color: #969799;
