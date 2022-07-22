@@ -9,7 +9,7 @@
     />
     <!-- 文章身体 -->
     <div class="main">
-      <h5 class="keywords">关键字</h5>
+      <h5 class="keywords">{{ articleTitle }}</h5>
       <!--  -->
       <div class="authorInfo">
         <div class="head_portrait">
@@ -277,6 +277,8 @@ export default {
   name: "ArticleDetails",
   data() {
     return {
+      // 文章关键词
+      articleTitle: localStorage.getItem("articleTitle"),
       // 该页文章的文章id
       textId: localStorage.getItem("textId"),
       // 文章详情里面的信息
