@@ -16,7 +16,7 @@
     <van-cell
       title="性别"
       is-link
-      :value="userInfo.gender ? '女' : '男'"
+      :value="columns[userInfo.gender]"
       @click="userGender = true"
     />
     <van-cell
