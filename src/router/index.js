@@ -45,6 +45,11 @@ const routes = [
     path: "/search",
     component: () => import("@/views/search"),
   },
+  // 编辑用户信息的页面
+  {
+    path: "/userinfo",
+    component: () => import("@/views/userInfo"),
+  },
 ];
 
 const router = new VueRouter({
