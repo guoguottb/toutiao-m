@@ -72,6 +72,8 @@ export default {
       console.log(this.articleInfo);
       //  存储文章id
       localStorage.setItem("textId", this.articleInfo.art_id);
+      // 存储关键词
+      localStorage.setItem("articleTitle", this.articleInfo.title);
       // 通过路由跳转页面
       this.$router.push("/particulars");
     },
