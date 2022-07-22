@@ -17,6 +17,9 @@ import "amfe-flexible/index.min.js";
 // 格式化时间的插件
 import dayjs from "dayjs";
 
+// 引入文章正文的样式
+import "@/assets/markdown/markdown.css";
+
 Vue.config.productionTip = false;
 
 new Vue({

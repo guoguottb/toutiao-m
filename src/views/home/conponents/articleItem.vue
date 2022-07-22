@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="toParticulars">
     <!-- 没有图片的情况 -->
     <van-cell
       :title="articleInfo.title"
@@ -60,6 +60,20 @@ export default {
       const val = this.articleInfo;
       const timeNow = dayjs(val.pubdate).fromNow();
       return `${val.aut_name} ${val.comm_count}评论 ${timeNow}`;
+    },
+  },
+  methods: {
+    toParticulars() {
+      console.log(11);
+    },
+  },
+  methods: {
+    toParticulars() {
+      console.log(this.articleInfo);
+      //  存储文章id
+      localStorage.setItem("textId", this.articleInfo.art_id);
+      // 通过路由跳转页面
+      this.$router.push("/particulars");
     },
   },
 };
