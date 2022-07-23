@@ -51,3 +51,29 @@ export const cancelLickComment = (target) => {
     method: "DELETE",
   });
 };
+
+/**
+ * 关注用户
+ * @param {String} arget 关注用户的id
+ * @returns Promise
+ */
+export const attentionAuthor = (target) => {
+  return request({
+    url: "/v1_0/user/followings",
+    method: "POST",
+    data: {
+      target,
+    },
+  });
+};
+
+/**
+ *  取消关注用户
+ * @param {String} target 目标用户（被取消关注的用户id）
+ */
+export const cancelFollowing = (target) => {
+  return request({
+    url: `/v1_0/user/followings/${target}`,
+    method: "DELETE",
+  });
+};
