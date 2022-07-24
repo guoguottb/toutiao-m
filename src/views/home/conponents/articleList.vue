@@ -5,7 +5,15 @@
       @refresh="onLoad"
       :success-text="reSuccess"
     >
+      <div
+        v-if="!ArticleList.length"
+        class="loadMoer"
+        @click="getArticleList()"
+      >
+        <span>{{ hint }}</span>
+      </div>
       <van-list
+        v-else
         @load="onLoad"
         v-model="loading"
         :finished="finished"
@@ -39,6 +47,7 @@ export default {
       error: false,
       refreshing: false,
       reSuccess: "刷新成功",
+      hint: "请求失败，点击重新加载",
     };
   },
   props: {
@@ -50,14 +59,13 @@ export default {
     },
   },
   // 创建前
-  created() {
-    this.getArticleList();
-  },
+  created() {},
   // 方法
   methods: {
     // 获取 处理文章列表
     async getArticleList() {
       try {
+        this.hint = "正在加载...";
         const res = await getArticleList(this.id, +new Date());
         this.ArticleList = res.data.data.results;
         this.pre_timestamp = res.data.data.pre_timestamp;
@@ -67,6 +75,7 @@ export default {
         if (status === 400) {
           throw new Error(error.response.data.message);
         } else {
+          this.hint = "请求失败，点击重新加载";
           this.$toast.fail("获取文章列表失败，请重新刷新");
         }
       }
@@ -104,5 +113,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less" scoped>
+.loadMoer {
+  color: #969799;
+  font-size: 0.37333rem;
+  line-height: 1.33333rem;
+  text-align: center;
+}
 </style>
