@@ -293,6 +293,7 @@
 </template>
 
 <script>
+import { ImagePreview } from "vant";
 // API
 import dayjs from "@/utils/dayjs";
 import {
@@ -361,6 +362,8 @@ export default {
       replyCom: false,
       // footer 转发 弹出层显示与否
       transpondShow: false,
+      // 图片预览
+      images: [],
     };
   },
   methods: {
@@ -368,14 +371,24 @@ export default {
     async getNewsDetails() {
       try {
         const res = await getNewsDetails(this.textId);
-        console.log(res, 123);
         this.textParticulars = res.data.data;
         console.log(this.textParticulars);
         this.attitude =
           this.textParticulars.attitude === (0 || -1) ? false : true;
+        // 待数据渲染到页面上的时候
         this.$nextTick(() => {
+          // 获取文章里面的所有img标签
           let imgs = document.querySelectorAll(".article-content img");
-          console.log(imgs);
+          imgs.forEach((item, index) => {
+            item.addEventListener("click", () => {
+              // 给所有的dom元素添加点击事件
+              ImagePreview({
+                images: this.images,
+                startPosition: index,
+              });
+            });
+            this.images.push(item.src);
+          });
         });
       } catch (error) {
         console.log(error);
