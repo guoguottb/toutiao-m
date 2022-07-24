@@ -1,12 +1,22 @@
 <template>
   <div>
+    <input type="file" ref="file" style="display: none" @change="updataPhoto" />
     <van-nav-bar
       title="个人信息"
       left-arrow
       @click-left="$router.back()"
       class="nav-bar"
     />
-    <van-cell title="头像" is-link value="内容" />
+    <van-cell title="头像" is-link @click="$refs.file.click()">
+      <template #default>
+        <van-image
+          round
+          width="0.8rem"
+          height="0.8rem"
+          :src="`https://img01.yzcdn.cn/vant/cat.jpeg`"
+        />
+      </template>
+    </van-cell>
     <van-cell
       title="昵称"
       is-link
@@ -103,6 +113,7 @@ export default {
       minDate: new Date(2020, 0, 1),
       maxDate: new Date(2025, 10, 1),
       currentDate: new Date(2021, 0, 17),
+      photo: "",
     };
   },
   // 方法
@@ -179,6 +190,15 @@ export default {
         this.UserBirthday = false;
         this.$$toast.fail("更新失败");
       }
+    },
+    // 更新头像
+    updataPhoto(e) {
+      let file = e.target.files[0];
+      const fs = new FileReader();
+      fs.readAsDataURL(file);
+      fs.onload = (e) => {
+        this.photo = e.target.result;
+      };
     },
   },
   // 创建后
