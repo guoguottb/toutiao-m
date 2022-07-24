@@ -23,7 +23,9 @@
         </div>
         <div class="authorName">
           <div class="authorname">{{ textParticulars.aut_name }}</div>
-          <div class="release_time">{{ timeNow }}</div>
+          <div class="release_time">
+            {{ textParticulars.pubdate | fromNowDate }}
+          </div>
         </div>
         <div class="ttention_button">
           <van-button
@@ -66,7 +68,7 @@
         <div class="comName">{{ item.aut_name }}</div>
         <div class="comText">{{ item.content }}</div>
         <div class="timer">
-          <span>{{ item.pubdate }}</span>
+          <span>{{ item.pubdate | fromNowDate }}</span>
           <button
             class="com_reply"
             @click="replyShowFn(item, item.reply_count, index)"
@@ -157,7 +159,7 @@
           <div class="comName">{{ replyitem.aut_name }}</div>
           <div class="comText">{{ replyitem.content }}</div>
           <div class="timer">
-            <span>{{ replyitem.pubdate }}</span>
+            <span>{{ replyitem.pubdate | fromNowDate }}</span>
             <button class="com_reply">回复 {{ replyitem.reply_count }}</button>
           </div>
         </div>
@@ -190,7 +192,7 @@
           <div class="comName">{{ item.aut_name }}</div>
           <div class="comText">{{ item.content }}</div>
           <div class="timer">
-            <span>{{ item.pubdate }}</span>
+            <span>{{ item.pubdate | fromNowDate }}</span>
             <button class="com_reply">回复 {{ item.reply_count }}</button>
           </div>
         </div>
@@ -283,8 +285,6 @@ export default {
       textId: localStorage.getItem("textId"),
       // 文章详情里面的信息
       textParticulars: {},
-      // 多少年前发布的文章
-      timeNow: "",
       // 评论的id信心
       commentData: {},
       // 评论列表的数组
@@ -317,7 +317,6 @@ export default {
       try {
         const res = await getNewsDetails(this.textId);
         this.textParticulars = res.data.data;
-        this.timeNow = dayjs(this.textParticulars.pubdate).fromNow();
         console.log(this.textParticulars);
         this.attitude =
           this.textParticulars.attitude === (0 || -1) ? false : true;
@@ -337,10 +336,6 @@ export default {
         this.commentData = res.data.data;
         // 根据结果 存储数据
         this.commentResults = this.commentData.results;
-        // 格式化评论时间
-        this.commentResults = this.commentResults.filter(
-          (item) => (item.pubdate = dayjs(item.pubdate).fromNow())
-        );
         console.log(this.commentResults);
       } catch (error) {
         console.log(error);
@@ -499,10 +494,6 @@ export default {
           source: id,
         });
         this.replys = res.data.data;
-        // 格式化一下时间
-        this.replys.results = this.replys.results.filter(
-          (item) => (item.pubdate = dayjs(item.pubdate).fromNow())
-        );
       } catch (error) {
         console.log(error);
       }
