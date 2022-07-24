@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "77151",
+      "name": "朋友圈",
+      "font_class": "pengyouquan",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "77156",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "4936984",
+      "name": "QQ",
+      "font_class": "QQ",
+      "unicode": "e882",
+      "unicode_decimal": 59522
+    },
+    {
+      "icon_id": "880392",
+      "name": "分享",
+      "font_class": "fenxiang1",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "7575029",
+      "name": "24gl-repost2",
+      "font_class": "24gl-repost2",
+      "unicode": "e99b",
+      "unicode_decimal": 59803
+    },
+    {
+      "icon_id": "18171150",
+      "name": "分享,转发",
+      "font_class": "redo",
+      "unicode": "ea1a",
+      "unicode_decimal": 59930
+    },
+    {
       "icon_id": "30469569",
       "name": "更多",
       "font_class": "gengduo",

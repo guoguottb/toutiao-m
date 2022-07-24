@@ -8,6 +8,9 @@ import "@/assets/icon-font/iconfont.css";
 
 //引入vant组件
 import Vant from "vant";
+import { ImagePreview } from "vant";
+// 全局注册
+Vue.use(ImagePreview);
 import "vant/lib/index.css";
 Vue.use(Vant);
 

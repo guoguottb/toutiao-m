@@ -42,6 +42,7 @@
             class="attention"
             v-else
             @click="is_attention"
+            style="background-color: #fff; color: #338af7"
             >已关注</van-button
           >
         </div>
@@ -88,7 +89,8 @@
       </div>
     </div>
     <div class="noMore">
-      <span>没有更多了</span>
+      <span v-if="moreCom">没有更多了</span>
+      <span @click="loadMore" v-else>尝试加载更多...</span>
     </div>
     <!-- footer -->
     <div class="footer">
@@ -113,7 +115,10 @@
             is_collected: attitude,
           }"
         ></span>
-        <span class="iconfont icon-fenxiang icon-04"></span>
+        <span
+          class="iconfont icon-fenxiang icon-04"
+          @click="transpondShow = true"
+        ></span>
       </div>
     </div>
     <!-- footer 写评论的弹出层 -->
@@ -178,7 +183,11 @@
         <van-cell title="全部回复" />
       </van-cell-group>
       <!-- 评论回复 -->
-      <div v-for="item in replys.results" :key="item.com_id" class="comment">
+      <div
+        v-for="(item, index) in replys.results"
+        :key="item.com_id"
+        class="comment"
+      >
         <div class="userportrait">
           <van-image
             round
@@ -197,15 +206,19 @@
           </div>
         </div>
         <div class="icon">
-          <div>
+          <div
+            @click="LickReply(item, index)"
+            :class="{ is_collected: item.is_liking }"
+          >
             <span class="iconfont icon-dianzan2"></span>
-            赞
+            {{ item.is_liking ? "取消" : "赞" }}
           </div>
         </div>
       </div>
       <!-- 没有更多了 -->
       <div class="noMore" style="margin-bottom: 92px">
-        <span>没有更多了</span>
+        <span v-if="replyCom">没有更多了</span>
+        <span v-else @click="moreReplyCom">尝试加载更多...</span>
       </div>
       <div class="replySearch">
         <van-button
@@ -245,10 +258,42 @@
         </van-field>
       </van-popup>
     </div>
+    <!-- footer 转发按钮弹出层 -->
+    <van-popup
+      v-model="transpondShow"
+      position="bottom"
+      :style="{ height: '20%' }"
+      round
+      class="transpond"
+    >
+      <van-cell title="快转" clickable>
+        <template #icon>
+          <span class="iconfont icon-redo"></span>
+        </template>
+      </van-cell>
+      <van-cell title="转发" clickable>
+        <template #icon>
+          <span class="iconfont icon-24gl-repost2"></span>
+        </template>
+      </van-cell>
+      <van-cell title="分享" clickable class="thirdparty">
+        <!-- cell 单元格 左侧icon -->
+        <template #icon>
+          <span class="iconfont icon-fenxiang1"></span>
+        </template>
+        <!--  -->
+        <template #default>
+          <span class="iconfont icon-weixin"></span>
+          <span class="iconfont icon-pengyouquan"></span>
+          <span class="iconfont icon-QQ"></span>
+        </template>
+      </van-cell>
+    </van-popup>
   </div>
 </template>
 
 <script>
+import { ImagePreview } from "vant";
 // API
 import dayjs from "@/utils/dayjs";
 import {
@@ -309,6 +354,16 @@ export default {
       // 评论回复弹框 内部的 发布评论弹框
       replysShow: false,
       message02: "",
+      // comOffset: "",
+      limit: "",
+      // 是否还有评论
+      moreCom: false,
+      // 是否还有评论回复
+      replyCom: false,
+      // footer 转发 弹出层显示与否
+      transpondShow: false,
+      // 图片预览
+      images: [],
     };
   },
   methods: {
@@ -320,6 +375,21 @@ export default {
         console.log(this.textParticulars);
         this.attitude =
           this.textParticulars.attitude === (0 || -1) ? false : true;
+        // 待数据渲染到页面上的时候
+        this.$nextTick(() => {
+          // 获取文章里面的所有img标签
+          let imgs = document.querySelectorAll(".article-content img");
+          imgs.forEach((item, index) => {
+            item.addEventListener("click", () => {
+              // 给所有的dom元素添加点击事件
+              ImagePreview({
+                images: this.images,
+                startPosition: index,
+              });
+            });
+            this.images.push(item.src);
+          });
+        });
       } catch (error) {
         console.log(error);
       }
@@ -332,10 +402,13 @@ export default {
           type: "a",
           source: this.textId,
         });
-        console.log(res);
         this.commentData = res.data.data;
         // 根据结果 存储数据
         this.commentResults = this.commentData.results;
+        if (this.commentResults.length < 10) {
+          // 如果获取来的数据小于10 让没有更多显示
+          this.moreCom = true;
+        }
         console.log(this.commentResults);
       } catch (error) {
         console.log(error);
@@ -350,7 +423,6 @@ export default {
         });
         // 将数据中的事件格式化一下
         let data = res.data.data.new_obj;
-        data.pubdate = dayjs(data.pubdate).fromNow();
         // 将请求的结果push到  当前页面的评论数组里面 影响视图
         this.commentResults.unshift(data);
         // 关闭弹框
@@ -494,6 +566,9 @@ export default {
           source: id,
         });
         this.replys = res.data.data;
+        if (this.replys.results.length < 10) {
+          this.replyCom = true;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -532,7 +607,71 @@ export default {
         this.$toast.fail("网络错误");
       }
     },
+    // 对评论回复点赞
+    async LickReply(item, index) {
+      console.log(item, index);
+      try {
+        // 如果处于点赞状态 发送的点击事项
+        if (item.is_liking) {
+          // 发请求
+          const res = await cancelLickComment(item.com_id);
+          console.log(res, "点赞到取消");
+          // 改数据
+          this.replys.results[index].is_liking = false;
+          // 轻提示
+          this.$toast("已取消点赞");
+        }
+        // 未处于点赞时候  触发的点击事项
+        else {
+          // 发请求
+          const res = await lickComment(item.com_id);
+          console.log(res, "未点赞到点赞");
+          // 改数据
+          this.replys.results[index].is_liking = true;
+          // 轻提示.
+          this.$toast("点赞成功");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // 获取更多的的评论
+    async loadMore() {
+      try {
+        const res = await getComments({
+          type: "a",
+          source: this.textId,
+          offset: this.commentResults[this.commentResults.length - 1].com_id,
+        });
+        this.commentResults.push(...res.data.data.results);
+        if (res.data.data.results.length < 10) {
+          this.moreCom = true;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$toast("网络异常");
+      }
+    },
+    // 获取更多的评论回复
+    async moreReplyCom() {
+      try {
+        const res = await getComments({
+          type: "a",
+          source: this.textId,
+          offset: this.replys.results[this.replys.results.length - 1].com_id,
+        });
+        this.replys.results.push(...res.data.data.results);
+        if (res.data.data.results.length < 10) {
+          //  尝试加载更多变为没有更多
+          this.replyCom = true;
+        }
+      } catch (error) {
+        console.log(error);
+        this.$toast("网络异常");
+      }
+    },
   },
+  // 创建后
   created() {
     // 获取 页面数据
     this.getNewsDetails();
@@ -811,6 +950,20 @@ export default {
     font-size: 30px;
     line-height: 64px;
     text-align: center;
+  }
+}
+
+// 转发弹出层样式
+.transpond {
+  .iconfont {
+    font-size: 30px !important;
+    margin-right: 30px;
+  }
+
+  .thirdparty {
+    .iconfont {
+      color: #e5e5e5;
+    }
   }
 }
 </style>

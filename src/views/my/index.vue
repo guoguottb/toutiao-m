@@ -138,7 +138,7 @@ export default {
       } catch (error) {
         console.log(error);
         if (error.response.status === 401) {
-          this.$$toast.fail("用户认证失败，请重新登录");
+          this.$toast.fail("用户认证失败，请重新登录");
           this.$router.push("/login");
         }
       }
