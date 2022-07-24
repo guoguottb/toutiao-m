@@ -86,7 +86,7 @@
 
 <script>
 // 导入API
-import { getUserInfo } from "@/apis";
+import { getUserInfo, removeToken } from "@/apis";
 export default {
   data() {
     return {
@@ -123,12 +123,20 @@ export default {
     },
     // 获取用户信息
     async getInfo() {
-      if (this.isShow) {
-        const {
-          data: { data },
-        } = await getUserInfo();
-        this.userInfo = data;
-        console.log(this.userInfo);
+      try {
+        if (this.isShow) {
+          const {
+            data: { data },
+          } = await getUserInfo();
+          this.userInfo = data;
+          console.log(this.userInfo);
+        }
+      } catch (error) {
+        console.log(error);
+        if (error.response.status === 401) {
+          this.$$toast.fail("用户认证失败，请重新登录");
+          this.$router.push("/login");
+        }
       }
     },
   },

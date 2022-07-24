@@ -17,6 +17,11 @@ import "amfe-flexible/index.min.js";
 // 格式化时间的插件
 import dayjs from "dayjs";
 
+// 全局过滤器 处理时间
+Vue.filter("fromNowDate", (val) => {
+  return dayjs(val).fromNow();
+});
+
 // 引入文章正文的样式
 import "@/assets/markdown/markdown.css";
 
