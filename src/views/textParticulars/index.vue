@@ -588,10 +588,6 @@ export default {
           // 文章id
           art_id: this.textId,
         });
-        // 格式化时间
-        res.data.data.new_obj.pubdate = dayjs(
-          res.data.data.new_obj.pubdate
-        ).fromNow();
         // 数据影响视图  给数组中unshift 进去新的数据  渲染页面
         this.replys.results.unshift(res.data.data.new_obj);
         this.replyitem.reply_count++;
