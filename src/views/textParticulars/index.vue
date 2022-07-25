@@ -966,5 +966,9 @@ export default {
       color: #e5e5e5;
     }
   }
+
+  .icon-fenxiang1 {
+    color: #323233 !important;
+  }
 }
 </style>
