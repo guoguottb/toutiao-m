@@ -15,6 +15,7 @@
     >
       <img class="photoImg" :src="photo" alt="" ref="img" />
       <span @click="confirm" class="confirm-message">完成</span>
+      <span class="cancel" @click="show = false">取消</span>
     </van-overlay>
     <input type="file" ref="file" style="display: none" @change="updataPhoto" />
     <van-nav-bar
@@ -223,13 +224,15 @@ export default {
             dragMode: "move", // 画布和图片都可以移动
             aspectRatio: 1, // 裁剪区默认正方形
             autoCropArea: 1, // 自动调整裁剪图片
-            cropBoxMovable: false, // 禁止裁剪区移动
-            cropBoxResizable: true, // 禁止裁剪区缩放
+            cropBoxMovable: true, // 是否禁止裁剪区移动
+            cropBoxResizable: true, // 是否禁止裁剪区缩放
             background: false, // 关闭默认背景
           });
         });
       };
       this.show = true;
+      // 相同文件 二次change 不生效
+      e.target.value = "";
     },
     // 头像裁剪完成按钮
     confirm() {
@@ -298,5 +301,12 @@ export default {
   transform: translateY(-50%);
   width: 100vw;
   height: 100vw;
+}
+
+.cancel {
+  position: fixed;
+  right: 0;
+  bottom: 100px;
+  color: #fff;
 }
 </style>
