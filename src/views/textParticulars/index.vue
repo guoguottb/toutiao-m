@@ -84,7 +84,7 @@
           :class="{ is_collected: item.is_liking }"
         >
           <span class="iconfont icon-dianzan2"></span>
-          {{ item.is_liking ? "取消" : "赞" }}
+          {{ item.is_liking ? item.like_count + 1 : item.like_count || "赞" }}
         </div>
       </div>
     </div>
@@ -174,7 +174,11 @@
             @click="lickComment(replyitem, itemIndex)"
           >
             <span class="iconfont icon-dianzan2"></span>
-            {{ replyitem.is_liking ? "取消" : "赞" }}
+            {{
+              replyitem.is_liking
+                ? replyitem.like_count + 1
+                : replyitem.like_count || "赞"
+            }}
           </div>
         </div>
       </div>
@@ -211,7 +215,11 @@
             :class="{ is_collected: item.is_liking }"
           >
             <span class="iconfont icon-dianzan2"></span>
-            {{ item.is_liking ? "取消" : "赞" }}
+            {{
+              item.is_liking
+                ? item.like_count + 1
+                : item.like_count || "赞"
+            }}
           </div>
         </div>
       </div>
@@ -537,6 +545,7 @@ export default {
         else {
           // 发送点赞的接口
           const res = await lickComment(item.com_id);
+          console.log(res);
           // 成功之后 数据影响视图
           this.commentResults[index].is_liking = true;
           // 轻提示
