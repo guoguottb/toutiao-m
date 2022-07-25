@@ -1,5 +1,9 @@
 <template>
   <div>
+    <van-button type="primary" text="显示遮罩层" @click="show = true" />
+    <van-overlay :show="show" @click="show = false"
+      ><img ref="img" src="../../../../电脑壁纸/我的图片/微信头像.jpg" alt=""
+    /></van-overlay>
     <input type="file" ref="file" style="display: none" @change="updataPhoto" />
     <van-nav-bar
       title="个人信息"
@@ -114,6 +118,7 @@ export default {
       maxDate: new Date(2025, 10, 1),
       currentDate: new Date(2021, 0, 17),
       photo: "",
+      show: false,
     };
   },
   // 方法
@@ -205,6 +210,20 @@ export default {
   created() {
     this.getPersonalData();
   },
+  // 挂载后
+  mounted() {
+    const img = this.$refs.img;
+    const cropper = new Cropper(img, {
+      viewMode: 1, // 只能在裁剪的图片范围内移动
+      dragMode: "move", // 画布和图片都可以移动
+      aspectRatio: 1, // 裁剪区默认正方形
+      autoCropArea: 1, // 自动调整裁剪图片
+      cropBoxMovable: false, // 禁止裁剪区移动
+      cropBoxResizable: false, // 禁止裁剪区缩放
+      background: false, // 关闭默认背景
+    });
+    console.log();
+  },
 };
 </script>
 
@@ -217,5 +236,8 @@ export default {
   .van-icon {
     color: #fff;
   }
+}
+.van-overlay {
+  z-index: 999999;
 }
 </style>

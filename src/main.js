@@ -2,7 +2,8 @@ import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-
+import "cropperjs/dist/cropper.css";
+import Cropper from "cropperjs";
 //引入字体图标css
 import "@/assets/icon-font/iconfont.css";
 
