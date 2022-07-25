@@ -109,8 +109,6 @@ import { getPersonalData, editUserInfo, updateUserPhoto } from "@/apis";
 import dayjs from "@/utils/dayjs";
 import "@/assets/icon-font/iconfont.css";
 import Cropper from "cropperjs";
-// 引入组件
-import Photo from "./photo";
 export default {
   name: "UserInfo",
   data() {
