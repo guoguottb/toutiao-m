@@ -1,9 +1,21 @@
 <template>
   <div>
-    <van-button type="primary" text="显示遮罩层" @click="show = true" />
-    <van-overlay :show="show" @click="show = false"
-      ><img ref="img" src="../../../../电脑壁纸/我的图片/微信头像.jpg" alt=""
-    /></van-overlay>
+    <van-button
+      type="primary"
+      text="显示遮罩层"
+      @click="show = true"
+      style="display: none"
+    />
+    <van-overlay
+      lay
+      :show="show"
+      @click="show = false"
+      class="mask"
+      v-if="show"
+    >
+      <img class="photoImg" :src="photo" alt="" ref="img" />
+      <span @click="confirm" class="confirm-message">完成</span>
+    </van-overlay>
     <input type="file" ref="file" style="display: none" @change="updataPhoto" />
     <van-nav-bar
       title="个人信息"
@@ -13,12 +25,7 @@
     />
     <van-cell title="头像" is-link @click="$refs.file.click()">
       <template #default>
-        <van-image
-          round
-          width="0.8rem"
-          height="0.8rem"
-          :src="`https://img01.yzcdn.cn/vant/cat.jpeg`"
-        />
+        <van-image round width="0.8rem" height="0.8rem" :src="userInfo.photo" />
       </template>
     </van-cell>
     <van-cell
@@ -97,8 +104,12 @@
 
 <script>
 // API
-import { getPersonalData, editUserInfo } from "@/apis";
+import { getPersonalData, editUserInfo, updateUserPhoto } from "@/apis";
 import dayjs from "@/utils/dayjs";
+import "@/assets/icon-font/iconfont.css";
+import Cropper from "cropperjs";
+// 引入组件
+import Photo from "./photo";
 export default {
   name: "UserInfo",
   data() {
@@ -119,6 +130,7 @@ export default {
       currentDate: new Date(2021, 0, 17),
       photo: "",
       show: false,
+      cropper: "",
     };
   },
   // 方法
@@ -201,9 +213,40 @@ export default {
       let file = e.target.files[0];
       const fs = new FileReader();
       fs.readAsDataURL(file);
-      fs.onload = (e) => {
-        this.photo = e.target.result;
+      fs.onload = (event) => {
+        this.photo = event.target.result;
+        this.$nextTick(() => {
+          // 裁剪框
+          const img = this.$refs.img;
+          this.cropper = new Cropper(img, {
+            viewMode: 1, // 只能在裁剪的图片范围内移动
+            dragMode: "move", // 画布和图片都可以移动
+            aspectRatio: 1, // 裁剪区默认正方形
+            autoCropArea: 1, // 自动调整裁剪图片
+            cropBoxMovable: false, // 禁止裁剪区移动
+            cropBoxResizable: true, // 禁止裁剪区缩放
+            background: false, // 关闭默认背景
+          });
+        });
       };
+      this.show = true;
+    },
+    // 头像裁剪完成按钮
+    confirm() {
+      this.cropper.getCroppedCanvas().toBlob(async (blob) => {
+        const fm = new FormData();
+        try {
+          fm.append("photo", blob);
+          const res = await updateUserPhoto(fm);
+          console.log(res);
+          this.userInfo.photo = res.data.data.photo;
+          // 轻提示
+          this.$toast.success("更新头像成功");
+        } catch (error) {
+          console.log(error);
+          this.$toast.fail("上传头像失败，请稍后重试");
+        }
+      });
     },
   },
   // 创建后
@@ -211,19 +254,7 @@ export default {
     this.getPersonalData();
   },
   // 挂载后
-  mounted() {
-    const img = this.$refs.img;
-    const cropper = new Cropper(img, {
-      viewMode: 1, // 只能在裁剪的图片范围内移动
-      dragMode: "move", // 画布和图片都可以移动
-      aspectRatio: 1, // 裁剪区默认正方形
-      autoCropArea: 1, // 自动调整裁剪图片
-      cropBoxMovable: false, // 禁止裁剪区移动
-      cropBoxResizable: false, // 禁止裁剪区缩放
-      background: false, // 关闭默认背景
-    });
-    console.log();
-  },
+  mounted() {},
 };
 </script>
 
@@ -239,5 +270,33 @@ export default {
 }
 .van-overlay {
   z-index: 999999;
+}
+
+.over {
+  z-index: 9999999999;
+}
+
+.confirm-message {
+  position: fixed;
+  bottom: 100px;
+  left: 0;
+  color: #fff;
+}
+
+:deep(.cropper-container) {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+:deep(.cropper-face) {
+  width: 100% !important;
+}
+.photoImg {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100vw;
+  height: 100vw;
 }
 </style>
