@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 import "cropperjs/dist/cropper.css";
 //引入字体图标css
-
+import "@/assets/icon-font/iconfont.css";
 //引入vant组件
 import Vant from "vant";
 import { ImagePreview } from "vant";

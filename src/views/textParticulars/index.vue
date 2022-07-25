@@ -215,11 +215,7 @@
             :class="{ is_collected: item.is_liking }"
           >
             <span class="iconfont icon-dianzan2"></span>
-            {{
-              item.is_liking
-                ? item.like_count + 1
-                : item.like_count || "赞"
-            }}
+            {{ item.is_liking ? item.like_count + 1 : item.like_count || "赞" }}
           </div>
         </div>
       </div>
